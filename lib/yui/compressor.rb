@@ -65,6 +65,7 @@ module YUI #:nodoc:
     def compress(stream_or_string)
       streamify(stream_or_string) do |stream|
         output = true
+        error = nil
         status = POpen4.popen4(command, "b") do |stdout, stderr, stdin, pid|
           begin
             stdin.binmode
@@ -76,15 +77,17 @@ module YUI #:nodoc:
               output = stdout.read
             end
 
+            error = stderr.read
+
           rescue Exception => e
-            raise RuntimeError, "compression failed: #{e.message} - #{e.backtrace.first}"
+            raise RuntimeError, "compression failed: #{e.message} - #{error}"
           end
         end
 
         if status.exitstatus.zero?
           output
         else
-          raise RuntimeError, "compression failed: YUI exited with code #{status.exitstatus} - #{stderr.read}"
+          raise RuntimeError, "compression failed: YUI exited with code #{status.exitstatus} - #{error}"
         end
       end
     end
