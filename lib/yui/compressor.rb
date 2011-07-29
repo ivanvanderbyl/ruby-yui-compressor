@@ -77,7 +77,7 @@ module YUI #:nodoc:
             end
 
           rescue Exception => e
-            raise RuntimeError, "compression failed"
+            raise RuntimeError, "compression failed: #{e.message} - #{e.backtrace.first}"
           end
         end
 
