@@ -1,4 +1,4 @@
-require "popen4"
+require "popen3"
 require "shellwords"
 require "stringio"
 
@@ -66,7 +66,7 @@ module YUI #:nodoc:
       streamify(stream_or_string) do |stream|
         output = true
         error = nil
-        status = POpen4.popen4(command, "b") do |stdout, stderr, stdin, pid|
+        status = POpen3.popen3(command, "b") do |stdout, stderr, stdin, pid|
           begin
             stdin.binmode
             transfer(stream, stdin)
